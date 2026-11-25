@@ -11,7 +11,7 @@ import os
 # Noms des colonnes du CSV produit par le camarade chargé du nettoyage.
 # A adapter ici si les noms changent, sans toucher au reste du script.
 # -----------------------------------------------------------------------
-COL_DATE = "date_semaine"   # colonne contenant le lundi de chaque semaine
+COL_DATE = "date"   # colonne contenant le lundi de chaque semaine
 COL_CA   = "ca"             # colonne chiffre d'affaires hebdomadaire en €
 
 # Chemins de sortie
@@ -25,7 +25,7 @@ NB_SEMAINES_TEST = 8
 # 1. Chargement des données
 # -----------------------------------------------------------------------
 print("Chargement du fichier CSV hebdomadaire...")
-df = pd.read_csv(os.path.join("data", "ventes_hebdo.csv"))
+df = pd.read_csv("ventes_hebdo.csv")
 
 # On s'assure que la colonne date est bien au format datetime
 df[COL_DATE] = pd.to_datetime(df[COL_DATE])

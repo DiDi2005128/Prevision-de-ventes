@@ -6,7 +6,7 @@ import os
 # Noms des colonnes attendues dans le DataFrame historique passe en entree.
 # A adapter ici si les noms changent cote API, sans toucher au reste.
 # -----------------------------------------------------------------------
-COL_DATE = "date_semaine"   # colonne date (lundi de la semaine)
+COL_DATE = "date" # colonne date (lundi de la semaine)
 COL_CA   = "ca"             # colonne chiffre d'affaires en €
 
 # Chemin vers le modele entraine et exporte par train_model.py
