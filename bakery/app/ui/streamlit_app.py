@@ -4,21 +4,27 @@ import pandas as pd
 import requests
 import streamlit as st
 
+from app.ui.csv_utils import lire_csv
+
 API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 st.title("Prévision du CA de la semaine suivante")
-st.caption("CSV hebdomadaire attendu : colonnes `week_start` et `revenue` (en €).")
+st.caption(
+    "CSV hebdomadaire attendu : colonnes `date` et `ca` (en €), "
+    "ou `week_start` et `revenue`. Dates au dimanche ou au lundi."
+)
 
 file = st.file_uploader("Fichier CSV", type="csv")
 
+
 if file is not None:
     try:
-        df = pd.read_csv(file, parse_dates=["week_start"]).sort_values("week_start")
+        df = lire_csv(file)
         history = [
             {"week_start": d.date().isoformat(), "revenue": float(r)}
             for d, r in zip(df["week_start"], df["revenue"])
         ]
-    except Exception as e:
+    except (ValueError, pd.errors.ParserError, pd.errors.EmptyDataError) as e:
         st.error(f"CSV illisible : {e}")
         st.stop()
 
@@ -26,7 +32,9 @@ if file is not None:
 
     if st.button("Prévoir"):
         try:
-            r = requests.post(f"{API_URL}/predict", json={"history": history}, timeout=10)
+            r = requests.post(
+                f"{API_URL}/predict", json={"history": history}, timeout=10
+            )
         except requests.RequestException:
             st.error("API injoignable.")
             st.stop()

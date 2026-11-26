@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from itertools import pairwise
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -18,7 +19,7 @@ class PredictRequest(BaseModel):
     def check_history(cls, h: list[WeekPoint]) -> list[WeekPoint]:
         if len(h) < MIN_WEEKS:
             raise ValueError(f"Il faut au moins {MIN_WEEKS} semaines consécutives")
-        for prev, cur in zip(h, h[1:]):
+        for prev, cur in pairwise(h):
             if cur.week_start - prev.week_start != timedelta(days=7):
                 raise ValueError(
                     "Les semaines doivent être triées et consécutives (7 jours d'écart)"

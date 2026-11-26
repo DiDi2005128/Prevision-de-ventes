@@ -1,4 +1,5 @@
 """Exemple de départ pour P4 (à compléter)."""
+
 from datetime import date, timedelta
 
 from fastapi.testclient import TestClient
@@ -41,3 +42,20 @@ def test_predict_negative_revenue():
     h = make_history(4)
     h[0]["revenue"] = -1
     assert client.post("/predict", json={"history": h}).status_code == 422
+
+
+def test_predict_unsorted_history():
+    assert (
+        client.post("/predict", json={"history": make_history(5)[::-1]}).status_code
+        == 422
+    )
+
+
+def test_predict_empty_history():
+    assert client.post("/predict", json={"history": []}).status_code == 422
+
+
+def test_predict_returns_monday_when_history_is_mondays():
+    h = make_history(5)  # départ un lundi (2022-07-04)
+    out = client.post("/predict", json={"history": h}).json()
+    assert out["week_start"] == "2022-08-08"

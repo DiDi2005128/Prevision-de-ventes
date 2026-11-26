@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 
 from app.api.predictor import predict_next_week
 from app.api.schemas import PredictRequest, PredictResponse
@@ -13,5 +13,8 @@ def health() -> dict:
 
 @app.post("/predict", response_model=PredictResponse)
 def predict(req: PredictRequest) -> PredictResponse:
-    value, week = predict_next_week(req.history)
+    try:
+        value, week = predict_next_week(req.history)
+    except FileNotFoundError as e:
+        raise HTTPException(status_code=503, detail=str(e)) from e
     return PredictResponse(prediction_eur=value, week_start=week)

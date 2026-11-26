@@ -1,25 +1,29 @@
-from datetime import date, timedelta
 import os
+from datetime import date, timedelta
+from functools import lru_cache
+
 import joblib
 import numpy as np
+
 from app.api.schemas import WeekPoint
 
-CHEMIN_MODELE = os.path.join(
-    os.path.dirname(__file__),
-    "..",
-    "..",
-    "models",
-    "ridge_model.joblib",
+CHEMIN_MODELE = os.path.normpath(
+    os.path.join(os.path.dirname(__file__), "..", "..", "models", "ridge_model.joblib")
 )
 
 
+@lru_cache(maxsize=1)
+def charger_modele():
+    """Charge le modèle une seule fois (mis en cache), pas à chaque requête."""
+    if not os.path.exists(CHEMIN_MODELE):
+        raise FileNotFoundError(f"Modèle introuvable : {CHEMIN_MODELE}")
+    return joblib.load(CHEMIN_MODELE)
+
+
 def predict_next_week(history: list[WeekPoint]) -> tuple[float, date]:
-    chemin_absolu = os.path.normpath(CHEMIN_MODELE)
-    if not os.path.exists(chemin_absolu):
-        raise FileNotFoundError(f"Modèle introuvable : {chemin_absolu}")
+    modele = charger_modele()
 
-    modele = joblib.load(chemin_absolu)
-
+    # Mêmes variables, dans le même ordre qu'à l'entraînement (train_model.py)
     lag_1 = history[-1].revenue
     lag_2 = history[-2].revenue
     lag_4 = history[-4].revenue
