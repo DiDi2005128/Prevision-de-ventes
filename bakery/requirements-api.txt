@@ -1,0 +1,4 @@
+fastapi
+uvicorn[standard]
+pydantic>=2
+# P2 ajoutera : scikit-learn, joblib, pandas
