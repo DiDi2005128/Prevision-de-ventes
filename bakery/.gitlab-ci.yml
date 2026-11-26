@@ -1,0 +1,15 @@
+image: python:3.11-slim
+
+stages: [lint, test]
+
+lint:
+  stage: lint
+  script:
+    - pip install ruff
+    - ruff check .
+
+test:
+  stage: test
+  script:
+    - pip install -r requirements-dev.txt
+    - pytest -q

@@ -1,0 +1,8 @@
+__pycache__/
+.venv/
+.pytest_cache/
+.ruff_cache/
+data/raw/
+*.joblib
+!models/ridge_model.joblib
+!models/.gitkeep
