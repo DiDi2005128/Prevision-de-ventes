@@ -4,7 +4,7 @@ import pandas as pd
 import requests
 import streamlit as st
 
-from app.ui.csv_utils import lire_csv
+from csv_utils import lire_csv
 
 API_URL = os.getenv("API_URL", "http://localhost:8000")
 
