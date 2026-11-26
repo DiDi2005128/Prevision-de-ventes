@@ -1,4 +1,5 @@
 .venv/
-data/*.csv
+# On ignore le CSV brut Kaggle mais on garde ventes_hebdo.csv pour la démo
+data/Bakery sales.csv
 .DS_Store
 __pycache__/

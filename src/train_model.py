@@ -25,7 +25,8 @@ NB_SEMAINES_TEST = 8
 # 1. Chargement des données
 # -----------------------------------------------------------------------
 print("Chargement du fichier CSV hebdomadaire...")
-df = pd.read_csv("ventes_hebdo.csv")
+# Le CSV doit se trouver dans data/ ; si lancé depuis la racine du projet
+df = pd.read_csv(os.path.join("data", "ventes_hebdo.csv"))
 
 # On s'assure que la colonne date est bien au format datetime
 df[COL_DATE] = pd.to_datetime(df[COL_DATE])
